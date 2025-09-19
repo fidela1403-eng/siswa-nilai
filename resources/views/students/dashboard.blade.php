@@ -1,90 +1,53 @@
-@php
-use App\Models\Grade;
+@extends('layouts.app')
 
-// Ambil ID siswa dari session
-$studentId = session('student_id') ?? 0;
+@section('title', 'Nilai Saya')
 
-// Ambil semua nilai siswa beserta mata pelajaran
-$grades = Grade::with('subject')
-                ->where('student_id', $studentId)
-                ->get();
-@endphp
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body class="bg-white min-h-screen text-gray-800">
-
-<div class="container mx-auto py-10">
-    <!-- Header Card -->
-    <div class="bg-blue-50 p-6 rounded-lg shadow-md mb-8">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold flex items-center gap-2 text-blue-800">
-                <i data-feather="user"></i> Welcome, {{ session('name') ?? 'Student' }}
+@section('content')
+<div class="container mx-auto mt-10">
+    <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-4xl mx-auto">
+        <!-- Judul -->
+        <div class="flex items-center mb-6">
+            <!-- Ikon Heroicons academic-cap -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-8 w-8 text-blue-600 mr-3"
+                 viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 2L0 6l10 4 10-4-10-4zM0 8v6a2 2 0 002 2h4v-4H4v-2l6 2 6-2v2h-2v4h4a2 2 0 002-2V8l-10 4L0 8z" />
+            </svg>
+            <h1 class="text-2xl font-bold text-blue-700">
+                Nilai Saya ({{ $student->name }})
             </h1>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="bg-blue-100 text-blue-700 font-semibold px-4 py-2 rounded hover:bg-blue-200 flex items-center gap-1">
-                    <i data-feather="log-out"></i> Logout
-                </button>
-            </form>
         </div>
-        <p class="mt-2 text-blue-700/80">You are logged in as <strong>Student</strong>.</p>
-    </div>
 
-    <!-- Nilai Card -->
-    <div class="bg-blue-50 p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-            <i data-feather="book"></i> Nilai Kamu
-        </h2>
+        <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-center">
-                <thead class="bg-blue-100 text-blue-800">
-                    <tr>
-                        <th class="px-4 py-2">Mata Pelajaran</th>
-                        <th class="px-4 py-2">Tugas</th>
-                        <th class="px-4 py-2">UTS</th>
-                        <th class="px-4 py-2">UAS</th>
-                        <th class="px-4 py-2">Nilai Akhir</th>
-                        <th class="px-4 py-2">Grade</th>
+            <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-blue-600 text-white">
+                        <th class="py-3 px-4 text-left">Nama Mapel</th>
+                        <th class="py-3 px-4 text-center">Tugas</th>
+                        <th class="py-3 px-4 text-center">UTS</th>
+                        <th class="py-3 px-4 text-center">UAS</th>
+                        <th class="py-3 px-4 text-center">Nilai Akhir</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-blue-200">
+                <tbody>
                     @forelse ($grades as $grade)
-                        @php
-                            // Soft colors untuk grade
-                            $gradeClass = match($grade->grade) {
-                                'A' => 'bg-blue-500 text-white',
-                                'B' => 'bg-blue-300 text-white',
-                                'C' => 'bg-blue-100 text-blue-800',
-                                'D' => 'bg-blue-50 text-blue-800',
-                                'E' => 'bg-gray-200 text-gray-800',
-                                default => 'bg-gray-100 text-gray-800'
-                            };
-                        @endphp
-                        <tr class="hover:bg-blue-50">
-                            <td class="px-4 py-2">{{ $grade->subject->nama_mapel ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $grade->tugas ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $grade->uts ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $grade->uas ?? '-' }}</td>
-                            <td class="px-4 py-2 font-semibold">{{ $grade->nilai_akhir ?? '-' }}</td>
-                            <td class="px-4 py-2">
-                                <span class="px-3 py-1 rounded-full {{ $gradeClass }}">
-                                    {{ $grade->grade ?? '-' }}
-                                </span>
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="py-3 px-4 font-medium text-gray-700">
+                                {{ $grade->subject->subject_name }}
+                            </td>
+                            <td class="py-3 px-4 text-center text-gray-600">{{ $grade->tugas }}</td>
+                            <td class="py-3 px-4 text-center text-gray-600">{{ $grade->uts }}</td>
+                            <td class="py-3 px-4 text-center text-gray-600">{{ $grade->uas }}</td>
+                            <td class="py-3 px-4 text-center font-semibold text-blue-700">
+                                {{ $grade->nilai_akhir }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-2 text-gray-500">Belum ada nilai.</td>
+                            <td colspan="5" class="py-4 text-center text-gray-500">
+                                Belum ada nilai
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -92,9 +55,4 @@ $grades = Grade::with('subject')
         </div>
     </div>
 </div>
-
-<script>
-    feather.replace()
-</script>
-</body>
-</html>
+@endsection

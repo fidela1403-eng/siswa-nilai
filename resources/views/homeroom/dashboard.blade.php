@@ -13,28 +13,18 @@
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href="{{ route('homeroom.student.index') }}" 
+            {{-- Manage Students --}}
+            <a href="{{ route('homeroom.students.index') }}" 
                class="p-6 bg-indigo-100 hover:bg-indigo-200 rounded-lg shadow text-center">
                 <h2 class="text-xl font-semibold text-indigo-700">👨‍🎓 Manage Students</h2>
                 <p class="text-gray-600 mt-2">Add, edit, and view your classroom students</p>
             </a>
 
-            <a href="{{ route('homeroom.grades.index') }}" 
+            {{-- Manage Grades --}}
+            <a href="{{ route('admin.grades.index') }}" 
                class="p-6 bg-green-100 hover:bg-green-200 rounded-lg shadow text-center">
                 <h2 class="text-xl font-semibold text-green-700">📊 Manage Grades</h2>
                 <p class="text-gray-600 mt-2">Input and update student grades</p>
-            </a>
-
-            <a href="{{ route('homeroom.subjects.index') }}" 
-               class="p-6 bg-pink-100 hover:bg-pink-200 rounded-lg shadow text-center">
-                <h2 class="text-xl font-semibold text-pink-700">📘 Manage Subjects</h2>
-                <p class="text-gray-600 mt-2">Add, edit, and view subjects</p>
-            </a>
-
-            <a href="#" 
-               class="p-6 bg-yellow-100 hover:bg-yellow-200 rounded-lg shadow text-center">
-                <h2 class="text-xl font-semibold text-yellow-700">📑 Reports</h2>
-                <p class="text-gray-600 mt-2">View class performance reports</p>
             </a>
         </div>
     </div>

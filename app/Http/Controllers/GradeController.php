@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
-use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
     /**
-     * Tampilkan daftar nilai
+     * Halaman daftar nilai untuk wali_kelas
      */
     public function index()
     {
         $grades = Grade::with(['student', 'subject'])->get();
-        return view('homeroom.grades.index', compact('grades'));
+        return view('admin.grades.index', compact('grades'));
     }
 
     /**
-     * Form tambah nilai
+     * Form tambah nilai (wali_kelas)
      */
     public function create()
     {
         $students = Student::all();
         $subjects = Subject::all();
-        return view('homeroom.grades.create', compact('students', 'subjects'));
+        return view('admin.grades.create', compact('students', 'subjects'));
     }
 
     /**
-     * Simpan nilai baru
+     * Simpan nilai baru (wali_kelas)
      */
     public function store(Request $request)
     {
@@ -49,22 +50,22 @@ class GradeController extends Controller
 
         Grade::create($validated);
 
-        return redirect()->route('homeroom.grades.index')
+        return redirect()->route('admin.grades.index')
                          ->with('success', '✅ Grade berhasil ditambahkan!');
     }
 
     /**
-     * Form edit nilai
+     * Form edit nilai (wali_kelas)
      */
     public function edit(Grade $grade)
     {
         $students = Student::all();
         $subjects = Subject::all();
-        return view('homeroom.grades.edit', compact('grade', 'students', 'subjects'));
+        return view('admin.grades.edit', compact('grade', 'students', 'subjects'));
     }
 
     /**
-     * Update nilai
+     * Update nilai (wali_kelas)
      */
     public function update(Request $request, Grade $grade)
     {
@@ -76,7 +77,6 @@ class GradeController extends Controller
             'uas'        => 'nullable|numeric|min:0|max:100',
         ]);
 
-        // Hitung nilai akhir otomatis
         $tugas = $validated['tugas'] ?? 0;
         $uts   = $validated['uts'] ?? 0;
         $uas   = $validated['uas'] ?? 0;
@@ -84,17 +84,36 @@ class GradeController extends Controller
 
         $grade->update($validated);
 
-        return redirect()->route('homeroom.grades.index')
+        return redirect()->route('admin.grades.index')
                          ->with('success', '✏️ Grade berhasil diperbarui!');
     }
 
     /**
-     * Hapus nilai
+     * Hapus nilai (wali_kelas)
      */
     public function destroy(Grade $grade)
     {
         $grade->delete();
-        return redirect()->route('homeroom.grades.index')
+        return redirect()->route('admin.grades.index')
                          ->with('success', '🗑️ Grade berhasil dihapus!');
+    }
+
+    /**
+     * Halaman nilai khusus siswa login
+     */
+    public function studentGrades()
+    {
+        $user = Auth::user();
+        $student = $user->student; // relasi: User hasOne(Student::class, 'id_user', 'id_user')
+
+        if (!$student) {
+            return redirect()->route('login')->with('error', 'Data siswa tidak ditemukan');
+        }
+
+        $grades = Grade::with('subject')
+            ->where('student_id', $student->id)
+            ->get();
+
+        return view('students.grades', compact('grades', 'student'));
     }
 }

@@ -4,36 +4,41 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Grade;
+use App\Models\Student;
+use App\Models\Subject;
 
 class GradeSeeder extends Seeder
 {
     public function run()
     {
-        Grade::create([
-            'student_id' => 1,
-            'subject_id' => 1,
-            'tugas' => 80,
-            'uts' => 85,
-            'uas' => 90,
-            'nilai_akhir' => 85, // bisa dihitung manual atau otomatis
-        ]);
+        // cari siswa berdasarkan nama
+        $siswa1 = Student::where('name', 'Fidela Dama Eksani')->first();
+        $siswa2 = Student::where('name', 'Budi Santoso')->first();
 
-        Grade::create([
-            'student_id' => 1,
-            'subject_id' => 2,
-            'tugas' => 75,
-            'uts' => 88,
-            'uas' => 92,
-            'nilai_akhir' => 85,
-        ]);
+        // cari mapel pertama (misalnya Matematika)
+        $mapel = Subject::first(); 
 
-        Grade::create([
-            'student_id' => 2,
-            'subject_id' => 1,
-            'tugas' => 70,
-            'uts' => 80,
-            'uas' => 85,
-            'nilai_akhir' => 79,
-        ]);
+        if ($siswa1 && $mapel) {
+            Grade::create([
+                'student_id'  => $siswa1->id,
+                'subject_id'  => $mapel->id,
+                'tugas'       => 80,
+                'uts'         => 85,
+                'uas'         => 90,
+                'nilai_akhir' => 85,
+            ]);
+        }
+
+        if ($siswa2 && $mapel) {
+            Grade::create([
+                'student_id'  => $siswa2->id,
+                'subject_id'  => $mapel->id,
+                'tugas'       => 70,
+                'uts'         => 75,
+                'uas'         => 80,
+                'nilai_akhir' => 75,
+            ]);
+        }
     }
 }
+

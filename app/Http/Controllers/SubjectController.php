@@ -11,13 +11,13 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::all();
-        return view('homeroom.subjects.index', compact('subjects'));
+        return view('admin.subjects.index', compact('subjects'));
     }
 
     // Tampilkan form create
     public function create()
     {
-        return view('homeroom.subjects.create');
+        return view('admin.subjects.create');
     }
 
     // Simpan data baru
@@ -29,14 +29,14 @@ class SubjectController extends Controller
 
         Subject::create($request->all());
 
-        return redirect()->route('homeroom.subjects.index')->with('success', 'Subject added successfully.');
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject added successfully.');
     }
 
     // Tampilkan form edit
     public function edit($id)
     {
         $subject = Subject::findOrFail($id);
-        return view('homeroom.subjects.edit', compact('subject'));
+        return view('admin.subjects.edit', compact('subject'));
     }
 
     // Update data
@@ -50,7 +50,7 @@ class SubjectController extends Controller
 
         $subject->update($request->all());
 
-        return redirect()->route('homeroom.subjects.index')->with('success', 'Subject updated successfully.');
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject updated successfully.');
     }
 
     // Hapus data
@@ -59,6 +59,6 @@ class SubjectController extends Controller
         $subject = Subject::findOrFail($id);
         $subject->delete();
 
-        return redirect()->route('homeroom.subjects.index')->with('success', 'Subject deleted successfully.');
+        return redirect()->route('admin.subjects.index')->with('success', 'Subject deleted successfully.');
     }
 }

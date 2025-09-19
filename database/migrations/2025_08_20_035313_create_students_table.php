@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->unsignedBigInteger('class_room_id');
-        $table->timestamps();
+            $table->id();
+            $table->string('name');
+            $table->unsignedBigInteger('class_room_id');
+            $table->unsignedBigInteger('id_user'); // 👉 relasi ke users
+            $table->timestamps();
 
-        $table->foreign('class_room_id')->references('id')->on('class_rooms')->onDelete('cascade');
-    });
-
+            $table->foreign('class_room_id')->references('id')->on('class_rooms')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade'); // relasi user
+        });
     }
 
     /**

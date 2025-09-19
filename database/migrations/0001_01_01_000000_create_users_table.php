@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id_user'); // 👉 ubah dari id() jadi id_user
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'wali_kelas', 'siswa', 'kepala_sekolah']); // 👈 tambah ini
+            $table->enum('role', ['admin', 'wali_kelas', 'siswa', 'kepala_sekolah']);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -29,13 +29,16 @@ return new class extends Migration
         });
 
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+    $table->string('id')->primary();
+    $table->unsignedBigInteger('user_id')->nullable()->index(); // balik ke user_id
+    $table->string('ip_address', 45)->nullable();
+    $table->text('user_agent')->nullable();
+    $table->longText('payload');
+    $table->integer('last_activity')->index();
+
+    $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
+});
+
     }
 
     /**

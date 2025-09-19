@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Subjects')
+@section('title', 'Daftar Kelas')
 
 @section('content')
-<div class="max-w-4xl mx-auto mt-10 px-4">
+<div class="max-w-6xl mx-auto mt-10 px-4">
     <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-bold text-indigo-600 mb-6">Subjects</h1>
+        <h1 class="text-3xl font-bold text-indigo-600 mb-6">Daftar Kelas</h1>
 
-        <!-- Button tambah mapel -->
-        <a href="{{ route('homeroom.subjects.create') }}" 
+        <!-- Button tambah kelas -->
+        <a href="{{ route('admin.classrooms.create') }}" 
            class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition mb-4">
-            ➕ Add Subject
+            ➕ Tambah Kelas
         </a>
 
         <!-- Alert sukses -->
@@ -20,33 +20,35 @@
             </div>
         @endif
 
-        <!-- Tabel daftar mapel -->
+        <!-- Tabel daftar kelas -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Kelas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @forelse ($subjects as $subject)
+                    @forelse ($classrooms as $classroom)
                     <tr>
                         <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4">{{ $subject->subject_name }}</td>
-                        <td class="px-6 py-4 space-x-2">
-                            <a href="{{ route('homeroom.subjects.edit', $subject->id) }}" 
+                        <td class="px-6 py-4 font-semibold">{{ $classroom->class_name }}</td>
+                        <td class="px-6 py-4 space-x-2 flex">
+                            <!-- Edit -->
+                            <a href="{{ route('admin.classrooms.edit', $classroom->id) }}" 
                                class="bg-yellow-400 px-3 py-1 rounded-lg hover:bg-yellow-500 text-white transition">
                                 ✏️ Edit
                             </a>
                             
-                            <form action="{{ route('homeroom.subjects.destroy', $subject->id) }}" method="POST" class="inline">
+                            <!-- Delete -->
+                            <form action="{{ route('admin.classrooms.destroy', $classroom->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 
                                         class="bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600 text-white transition"
-                                        onclick="return confirm('Are you sure?')">
+                                        onclick="return confirm('Apakah kamu yakin ingin menghapus kelas ini?')">
                                     🗑️ Delete
                                 </button>
                             </form>
@@ -55,7 +57,7 @@
                     @empty
                     <tr>
                         <td colspan="3" class="px-6 py-4 text-center text-gray-500">
-                            No subjects found.
+                            Tidak ada kelas.
                         </td>
                     </tr>
                     @endforelse

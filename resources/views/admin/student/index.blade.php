@@ -8,7 +8,7 @@
         <h1 class="text-3xl font-bold text-indigo-600 mb-6">Student</h1>
 
         <!-- Button tambah siswa -->
-        <a href="{{ route('homeroom.student.create') }}" 
+        <a href="{{ route('admin.student.create') }}" 
            class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mb-4">
             ➕ Add Student
         </a>
@@ -31,10 +31,10 @@
                         <td class="px-6 py-4">{{ $student->name }}</td>
                         <td class="px-6 py-4">{{ $student->classRoom->class_name ?? '-' }}</td>
                         <td class="px-6 py-4 space-x-2">
-                            <a href="{{ route('homeroom.student.edit', $student->id) }}" 
+                            <a href="{{ route('admin.student.edit', $student->id) }}" 
                                class="bg-yellow-400 px-3 py-1 rounded-lg hover:bg-yellow-500 text-white transition">✏️ Edit</a>
                             
-                            <form action="{{ route('homeroom.student.destroy', $student->id) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.student.destroy', $student->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" 

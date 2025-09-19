@@ -3,50 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // validasi input
+        // Validate input
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
 
-        // cek user di database
-        $user = DB::table('users')->where('email', $request->email)->first();
+        // Try login using Auth
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $user = Auth::user();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            // simpan session
-            session([
-                'user_id' => $user->id,
-                'role' => $user->role,
-                'name' => $user->name
-            ]);
-
-            // redirect berdasarkan role
-            if ($user->role === 'wali_kelas') {
+            // Redirect based on role
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'wali_kelas') {
                 return redirect()->route('homeroom.dashboard');
             } elseif ($user->role === 'siswa') {
-                return redirect()->route('student.dashboard');
+                return redirect()->route('student.grades');
             } else {
-                return redirect()->route('login')->with('error', 'Role tidak dikenali');
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Role not recognized.');
             }
         }
 
-        // kalau gagal login
-        return back()->with('error', 'Email atau Password salah');
+        // If login failed
+        return back()->with('error', 'Email or Password is incorrect');
     }
 
     public function logout(Request $request)
     {
-        // hapus semua session
-        $request->session()->flush();
+        Auth::logout(); // remove user session
 
-        // redirect ke login dengan pesan sukses
-        return redirect()->route('login')->with('success', 'Anda berhasil logout!');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'You have successfully logged out!');
     }
 }

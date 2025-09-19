@@ -13,7 +13,7 @@ class ClassRoomController extends Controller
     public function index()
     {
         $classrooms = ClassRoom::all();
-        return view('homeroom.classrooms.index', compact('classrooms'));
+        return view('admin.classrooms.index', compact('classrooms'));
     }
 
     /**
@@ -21,7 +21,7 @@ class ClassRoomController extends Controller
      */
     public function create()
     {
-        return view('homeroom.classrooms.create');
+        return view('admin.classrooms.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class ClassRoomController extends Controller
             'class_name' => $request->class_name,
         ]);
 
-        return redirect()->route('homeroom.classrooms.index')
+        return redirect()->route('admin.classrooms.index')
                          ->with('success', 'Kelas berhasil ditambahkan.');
     }
 
@@ -46,7 +46,7 @@ class ClassRoomController extends Controller
      */
     public function show(ClassRoom $classroom)
     {
-        return view('homeroom.classrooms.show', compact('classroom'));
+        return view('admin.classrooms.show', compact('classroom'));
     }
 
     /**
@@ -54,7 +54,7 @@ class ClassRoomController extends Controller
      */
     public function edit(ClassRoom $classroom)
     {
-        return view('homeroom.classrooms.edit', compact('classroom'));
+        return view('admin.classrooms.edit', compact('classroom'));
     }
 
     /**
@@ -70,7 +70,7 @@ class ClassRoomController extends Controller
             'class_name' => $request->class_name,
         ]);
 
-        return redirect()->route('homeroom.classrooms.index')
+        return redirect()->route('admin.classrooms.index')
                          ->with('success', 'Kelas berhasil diperbarui.');
     }
 
@@ -81,7 +81,7 @@ class ClassRoomController extends Controller
     {
         $classroom->delete();
 
-        return redirect()->route('homeroom.classrooms.index')
+        return redirect()->route('admin.classrooms.index')
                          ->with('success', 'Kelas berhasil dihapus.');
     }
 }

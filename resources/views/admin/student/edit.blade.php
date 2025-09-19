@@ -15,7 +15,7 @@
                     <h3>Edit Student</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('students.update', $student->id) }}" method="POST">
+                    <form action="{{ route('admin.student.update', $student->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -47,7 +47,7 @@
                         <!-- Buttons -->
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Update Student</button>
-                            <a href="{{ route('students.index') }}" class="btn btn-secondary">Back</a>
+                            <a href="{{ route('admin.student.index') }}" class="btn btn-secondary">Back</a>
                         </div>
                     </form>
                 </div>

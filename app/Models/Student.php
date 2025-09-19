@@ -9,12 +9,31 @@ class Student extends Model
 {
     use HasFactory;
 
-    // Tambahkan kolom yang boleh diisi massal
-    protected $fillable = ['name', 'class_room_id'];
+    // Primary key default tetap id
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
-    // Relasi ke ClassRoom
+    // Kolom yang boleh diisi massal
+    protected $fillable = [
+        'name',
+        'class_room_id',
+        'id_user', // tambahin relasi ke users
+    ];
+
+    /**
+     * Relasi ke ClassRoom
+     */
     public function classRoom()
     {
-        return $this->belongsTo(ClassRoom::class);
+        return $this->belongsTo(ClassRoom::class, 'class_room_id', 'id');
+    }
+
+    /**
+     * Relasi ke User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 }
